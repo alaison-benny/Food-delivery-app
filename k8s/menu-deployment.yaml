@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: menu-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: menu-app
+  template:
+    metadata:
+      labels:
+        app: menu-app
+    spec:
+      containers:
+      - name: menu-container
+        # ഇവിടെ :v1 ചേർക്കാൻ മറക്കരുത്
+        image: 485044328888.dkr.ecr.us-east-2.amazonaws.com/menu-service:v1 
+        ports:
+        - containerPort: 5001
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: menu-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: menu-app
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 5001
